@@ -102,6 +102,23 @@ suite('simulate events', function() {
     assert.equal(app._testLocalTarget, app, 'app local target');
     assert.equal(app._testRootTarget, app, 'app root target');
   });
+
+  test('HTMLElement.click triggers a click event', function(done) {
+    const buttonA = document.createElement('button');
+    const buttonB = document.createElement('button');
+    document.body.appendChild(buttonA);
+    document.body.appendChild(buttonB);
+
+    buttonB.addEventListener('click', () => {
+      buttonB.parentElement.removeChild(buttonA);
+      buttonB.parentElement.removeChild(buttonB);
+      done();
+    });
+
+    // simulate a user cick on a button on a touch device
+    buttonA.dispatchEvent(new CustomEvent('touchend', { bubbles: true }));
+    buttonB.click();
+  });
 });
 
 suite('Event Setup and Teardown', function() {
